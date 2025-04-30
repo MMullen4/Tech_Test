@@ -16,6 +16,10 @@
     "render-build": "npm install && npm run build",
     "cypress": "cypress open",
     "test": "npx cypress run --browser electron --headless",
+    "test:e2e": "cypress run --e2e",
+    "test:component": "cypress run --component",
+    "test:e2e:dev": "cypress open --e2e",
+    "test:component:dev": "cypress open --component",
     "test-gui": "npx cypress open --detached"
   },
   "keywords": [],
