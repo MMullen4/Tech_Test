@@ -1,6 +1,6 @@
 // button component test
 
-import Button from "../../client/src/components/Button";
+import Button from "../../client/src/components/Quiz";
 
 describe("Button Component", () => {
   it("renders correctly", () => {
