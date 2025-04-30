@@ -1,3 +1,4 @@
+// end-to-end tests 
 import { mockState } from '../support/utils/helpers';
 import { Responses } from '../support/types';
 
