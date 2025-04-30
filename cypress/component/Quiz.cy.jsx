@@ -4,7 +4,7 @@ import Quiz from "../../client/src/components/Quiz";
 
 describe("<Quiz />", () => {
   beforeEach(() => {
-    // mount the component
+    // mount the component before each test
     cy.mount(<Quiz />);
   });
 
