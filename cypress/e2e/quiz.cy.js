@@ -62,8 +62,6 @@ describe("Quiz Application", () => {
       const totalQuestions = 5; // Adjust the total number of questions as needed
 
       for (let i = 0; i < totalQuestions; i++) {
-        answerQuestion();
-
         cy.get('[data-testid="answer-options"]')
           .find('input[type="radio"]')
           .first()
