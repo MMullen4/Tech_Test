@@ -20,13 +20,12 @@
     "test:component": "cypress run --component",
     "test:e2e:dev": "cypress open --e2e",
     "test:component:dev": "cypress open --component",
-    "test-gui": "npx cypress open --detached"
+    "test-gui": "npx cypress open -npm-detached"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/jest": "^29.5.14",
     "@types/react": "^18.3.3",
     "@vitejs/plugin-react": "^4.3.1",
     "concurrently": "^8.2.2",
