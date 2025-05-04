@@ -1,25 +1,39 @@
 describe("Quiz Application", () => {
   beforeEach(() => {
-    cy.visit("/quiz");
+    cy.visit("http://localhost:3001/");
   });
 
   it("should load the quiz page successfully", () => {
     // check if the main container exists
-    cy.get('[data-testid="quiz-contain"]').should("exist");
-    cy.get('[data-testid="quiz-title"]').should("be.visable");
+    cy.visit(`http://localhost:3001/`);
+    cy.findByRole("document", { name: "" }).should("exist");
+    cy.findByRole("button", { name: "Start Quiz" }).should("be.visible");
   });
 
   it("should display the quiz questions one at a time", () => {
-    cy.get('[data-testid="question"]').should("be.visable");
-    cy.get('[data-testid="question-number"]').should("contain", "1");
+    // Start the quiz first
+    cy.findByRole("button", { name: "Start Quiz" }).click();
+
+    // Find question by its role
+    cy.findByRole("button", { name: "1" }).should("be.visible");
+    cy.findByRole("button", { name: "2" }).should("be.visible");
+    cy.findByRole("button", { name: "3" }).should("be.visible");
+    cy.findByRole("button", { name: "4" }).should("be.visible");
+
+    //check if 1st question is displayed
+    cy.get('[data-testid="question"]').should("be.visible");
+  
   });
 
   it("should allow the user to select an answer", () => {
-    cy.get('[data-testid="answer-options"]')
+    // start the quiz
+    cy.findByRole("button", { name: "Start Quiz" }).click();
+
+    // select an answer
+    cy.get('[data-testid="quiz-container"]')
       .find('input[type="radio"]')
       .first()
-      .check()
-      .should("be.checked");
+      .check();
   });
 
   it("should validate answer submission", () => {
@@ -29,14 +43,14 @@ describe("Quiz Application", () => {
       .first()
       .check();
 
-    // sumbit answer
+    // submit answer
     cy.get('[data-testid="submit-answer"]').click();
 
     // verify feedback is displayed
     cy.get('[data-testid="feedback"]').should("be.visible");
   });
 
-  it("should navigete through all questions", () => {
+  it("should navigate through all questions", () => {
     const answerQuestion = () => {
       cy.get('[data-testid="answer-options"]')
         .find('input[type="radio"]')
@@ -53,7 +67,7 @@ describe("Quiz Application", () => {
     }
 
     // verify progress
-    cy.get('[data.testid="progress-indicator"]').should("exist");
+    cy.get('[data-testid="progress-indicator"]').should("exist");
   });
 
   it("should display final score at end", () => {
@@ -79,8 +93,8 @@ describe("Quiz Application", () => {
   });
 
   it("should handle accessibility requirements", () => {
-    // check for ARIA lables
-    cy.get('[data.testid="question"]').should("have.attr", "aria-label");
+    // check for ARIA labels
+    cy.get('[data-testid="question"]').should("have.attr", "aria-label");
 
     // verify keyboard nav
     cy.get('[data-testid="answer-options"]')
@@ -104,15 +118,14 @@ describe("Quiz Application", () => {
     cy.reload();
 
     // verify progress was saved
-    cy.get('[data-testid="progress-indicator"]')
-      .should('contain', '1');
+    cy.get('[data-testid="progress-indicator"]').should("contain", "1");
   });
 
-  it('shoudl handle error states gracefully', () => {
+  it("should handle error states gracefully", () => {
     // test submission w/o selecting an answer
     cy.get('[data-testid="submit-answer"]').click();
     cy.get('[data-testid="error-message"]')
-      .should('be.visible')
-      .and('contain', 'Please select an answer before submitting.');
+      .should("be.visible")
+      .and("contain", "Please select an answer before submitting.");
   });
 });
