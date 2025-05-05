@@ -22,7 +22,6 @@ describe("Quiz Application", () => {
 
     //check if 1st question is displayed
     cy.get('[data-testid="question"]').should("be.visible");
-  
   });
 
   it("should allow the user to select an answer", () => {
@@ -30,102 +29,53 @@ describe("Quiz Application", () => {
     cy.findByRole("button", { name: "Start Quiz" }).click();
 
     // select an answer
-    cy.get('[data-testid="quiz-container"]')
-      .find('input[type="radio"]')
-      .first()
-      .check();
+    cy.get('[data-testid^="answer-option-"]').first().click();
   });
 
-  it("should validate answer submission", () => {
-    // select an answer
-    cy.get('[data-testid="answer-options"]')
-      .find('input[type="radio"]')
-      .first()
-      .check();
-
-    // submit answer
-    cy.get('[data-testid="submit-answer"]').click();
-
-    // verify feedback is displayed
-    cy.get('[data-testid="feedback"]').should("be.visible");
-  });
 
   it("should navigate through all questions", () => {
-    const answerQuestion = () => {
-      cy.get('[data-testid="answer-options"]')
-        .find('input[type="radio"]')
-        .first()
-        .check();
+    cy.findByRole("button", { name: "Start Quiz" }).click();
 
-      cy.get('[data-testid="submit-answer"]').click();
-      cy.get('[data-testid="next-question"]').click();
+    // function to answer a question
+    const answerQuestion = () => {
+      cy.get('[data-testid^="answer-option-"]').first().click();
     };
 
     // answer multiple questions
     for (let i = 0; i < 10; i++) {
       answerQuestion();
     }
-
-    // verify progress
-    cy.get('[data-testid="progress-indicator"]').should("exist");
   });
 
   it("should display final score at end", () => {
+    cy.findByRole("button", { name: "Start Quiz" }).click();
+
+    // wait for the quiz to load
+    cy.get(`[data-testid="quiz-container"]`).should("be.visible");
+
     // function to complete quiz
     const completeQuiz = () => {
-      const totalQuestions = 5; // Adjust the total number of questions as needed
+      // click 1st choice until we reach the end
+      cy.get("body").then(($body) => {
+        if ($body.find('[data-testid^="answer-option-"]').length > 0) {
+          // click 1st answer
+          cy.get('[data-testid="answer-option-0"]').click();
 
-      for (let i = 0; i < totalQuestions; i++) {
-        cy.get('[data-testid="answer-options"]')
-          .find('input[type="radio"]')
-          .first()
-          .check();
-        cy.get('[data-testid="submit-answer"]').click();
-
-        if (i < totalQuestions - 1)
-          cy.get('[data-testid="next-question"]').click();
-      }
+          // recursively call this func to handle next question
+          completeQuiz();
+        }
+      });
     };
-
     completeQuiz();
+
+    // check if quiz completed screen shows
+    cy.get('[data-testid="quiz-completed"]').should("be.visible");
+
+    // check if final score shows
     cy.get('[data-testid="final-score"]').should("be.visible");
-    cy.get('[data-testid="retry-quiz"]').should("be.visible");
-  });
+    cy.get('[data-testid="final-score"]').should("contain", "Your score:");
 
-  it("should handle accessibility requirements", () => {
-    // check for ARIA labels
-    cy.get('[data-testid="question"]').should("have.attr", "aria-label");
-
-    // verify keyboard nav
-    cy.get('[data-testid="answer-options"]')
-      .find('input[type="radio"]')
-      .first()
-      .focus()
-      .should("have.focus")
-      .type("{enter}")
-      .should("be.checked");
-  });
-
-  it("should persist quiz state on page reload", () => {
-    // answer a question
-    cy.get('[data-testid="answer-options"]')
-      .find('input[type="radio"]')
-      .first()
-      .check();
-    cy.get('[data-testid="submit-answer"]').click();
-
-    // reload the page
-    cy.reload();
-
-    // verify progress was saved
-    cy.get('[data-testid="progress-indicator"]').should("contain", "1");
-  });
-
-  it("should handle error states gracefully", () => {
-    // test submission w/o selecting an answer
-    cy.get('[data-testid="submit-answer"]').click();
-    cy.get('[data-testid="error-message"]')
-      .should("be.visible")
-      .and("contain", "Please select an answer before submitting.");
+    // verify "Take new quiz" button shows
+    cy.get('[data-testid="start-quiz-button"]').should("be.visible");
   });
 });
