@@ -27,12 +27,15 @@ This app has been enhanced by added Cypress tests for both component and end-to-
  - Tests form submission and feedback
  - Checks score display
 
+
 ## Screenshots
 
 ![Alt text](<Screenshot 2025-05-05 at 11.33.55 AM.png>)
 ![Alt text](<Screenshot 2025-05-05 at 11.33.28 AM.png>)
 
 # video walk through
+
+https://app.screencastify.com/v3/watch/50QkuGdIvAsiiouOppIl
 
 
 ## Contributing
@@ -47,6 +50,7 @@ Push to the branch (git push origin feature/your-feature-name)
 Open a Pull Request
 
 Please make sure your code follows the existing style patterns and includes appropriate tests.
+
 
 ## License
 This project is licensed under the MIT License - see below for details:
