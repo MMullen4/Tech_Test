@@ -47,7 +47,7 @@ describe("Quiz Application", () => {
     }
   });
 
-  it("should display final score at end", () => {
+  it("should display final score at end & allow user to retake the quiz", () => {
     cy.findByRole("button", { name: "Start Quiz" }).click();
 
     // wait for the quiz to load
